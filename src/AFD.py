@@ -140,6 +140,7 @@ class AFD:
         # comparar se sao iguais
 
     def equaivalencia_de_estados(self):
+        pass
         table = pd.DataFrame(columns=self.estados[:-1], index=self.estados[1:])
         print(table.loc['Q1', 'Q2'])
 
