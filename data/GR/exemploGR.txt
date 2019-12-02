@@ -1,0 +1,10 @@
+AUTÔMATO=({Q0,Q1,Q2,Q3},{a,b},Q0,P)
+P
+Q0 -> a Q1
+Q0 -> b Q2
+Q1 -> b Q2
+Q1 ->  
+Q2 -> a Q3
+Q3 -> a Q3
+Q3 -> b Q2
+Q3 ->  

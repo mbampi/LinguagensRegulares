@@ -1,0 +1,24 @@
+UFRGS App=({q0,q1,q2,q3,q4,q5,q6,q7,q8,q9},{s,n,et,d,r,c,ma,se,sa,re,v,sl,re},q0,{q1,q2,q3,q4,q5,q6,q7,q8,q9})
+Prog
+(q0,s)=q2
+(q0,n)=q1
+(q1,v)=q2
+(q2,se)=q3
+(q2,ma)=q5
+(q2,ma)=q7
+(q2,sl)=q2
+(q3,se)=q4
+(q3,se)=q2
+(q4,c)=q3
+(q5,ma)=q2
+(q5,ma)=q7
+(q5,sl)=q5
+(q5,se)=q6
+(q6,et)=q5
+(q7,ma)=q5
+(q7,ma)=q2
+(q7,se)=q8
+(q8,d)=q7
+(q8,r)=q7
+(q8,sa)=q9
+(q9,re)=q1
