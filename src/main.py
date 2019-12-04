@@ -1,7 +1,7 @@
 import os
 import csv
 
-from AFD3 import AFD
+from AFD import AFD
 from AFN import AFN
 from GR import GR
 
@@ -21,7 +21,7 @@ def le_afn_e_transforma_para_afd():
     print(afn)
 
     afd = afn.para_AFD()
-    print(afd)
+    return afd
 
 
 def le_afd_e_deixa_fp_total():
@@ -43,6 +43,16 @@ def le_lista_palavras_e_avalia(afd):
     print('rejeitadas= '+str(rejeitadas))
 
 
+def compara_automatos():
+    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    afd1 = AFD.afd_de_arquivo(caminho_arquivo)
+
+    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    afd2 = AFD.afd_de_arquivo(caminho_arquivo)
+
+    print(afd1.eh_equivalente(afd2))
+
+
 def gera_gr(afd):
     # ---- Transforma AFD em uma GR ----
     caminho_gr = os.getcwd() + '/data/GR/exemploGR.txt'
@@ -52,4 +62,4 @@ def gera_gr(afd):
 
 
 if __name__ == '__main__':
-    le_afn_e_transforma_para_afd()
+    compara_automatos()

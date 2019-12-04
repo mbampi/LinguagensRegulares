@@ -1,6 +1,8 @@
 
 import re
 import pandas as pd
+from itertools import product
+
 from GR import GR
 
 
@@ -57,6 +59,10 @@ class AFD:
                 funcoes_programa[(estado, simbolo)] = estado_resultante
 
             return AFD(nome, estados, simbolos, estado_inicial, estados_finais, funcoes_programa)
+
+    @staticmethod
+    def copy(afd):
+        return AFD(nome=afd.nome, estados=afd.estados, simbolos=afd.simbolos, estado_inicial=afd.estado_inicial, estados_finais=afd.estados_finais, funcoes_programa=afd.funcoes_programa)
 
     def __str__(self):
         output = f'\nnome={self.nome}'
@@ -137,13 +143,33 @@ class AFD:
                 print(tabela.iloc[y])
             print('/n')
 
+    @staticmethod
+    def combinacoes(lista, tamanho):
+        ''' Gera combinacao dos elementos da lista de 1 
+        ate o 'tamanho', retorna uma lista de listas'''
+        todas_palavras = []
+        for tam in range(1, tamanho+1):
+            lista_palavras = list(product(lista, repeat=tam))
+            palavras = list(map(lambda a: list(a), lista_palavras))
+            todas_palavras.extend(palavras)
+
+        return todas_palavras
+
     def eh_equivalente(self, afd):
         ''' Determina se os dois AFD's sao equivalentes
-        minimizando os dois e comparando eles posteriormente 
+        minimizando os dois e comparando eles posteriormente
         (AFD minimo eh unico)'''
-        afd1 = self.minimizado()
-        afd2 = afd2.minimizado()
-        # AFD minimizados sao unicos
-        # depois de minimizado
-        # renomear os estados e terminais
-        # comparar se sao iguais
+        afd1 = AFD.copy(self)
+        afd2 = afd
+        afd1.minimizado()
+        afd2.minimizado()
+        if len(afd1.estados) != len(afd2.estados) or\
+                len(afd1.estaos_finais) != len(afd.estados_finais) or\
+                len(afd1.simbolos) != len(afd2.simbolos):
+            return False
+
+        palavras = AFD.combinacoes(afd1.simbolos, len(afd1.estados)-1)
+        for palavra in palavras:
+            if afd1.aceita(palavra) != afd2.aceita(palavra):
+                return False
+        return True
