@@ -1,37 +1,55 @@
 import os
 import csv
 
-from AFD import AFD
+from AFD3 import AFD
+from AFN import AFN
 from GR import GR
 
 
 def csv_para_lista(caminho_arquivo):
+    palavras = []
     with open(caminho_arquivo, 'r') as arquivo:
         leitor = csv.reader(arquivo)
-        lista = list(leitor)[0]
-    return lista
+        for linha in leitor:
+            palavras.append(list(linha))
+    return palavras
 
 
-if __name__ == '__main__':
+def le_afn_e_transforma_para_afd():
+    caminho_arquivo = os.getcwd() + '/data/AFN/tpoint.txt'
+    afn = AFN.afn_de_arquivo(caminho_arquivo)
+    print(afn)
 
-    # Le arquivo de texto e transorma em AFD
+    afd = afn.para_AFD()
+    print(afd)
+
+
+def le_afd_e_deixa_fp_total():
+    # ---- Le arquivo de texto e transorma em AFD ----
     caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
     afd = AFD.afd_de_arquivo(caminho_arquivo)
     print(afd)
 
-    # Dada uma lista de palavras retorna as aceitas e rejeitadas pelo AFD
+    afd.funcao_programa_total()
+    print(afd)
+
+
+def le_lista_palavras_e_avalia(afd):
+    # ---- Dada uma lista de palavras retorna as aceitas e rejeitadas pelo AFD ----
     caminho_palavras = os.getcwd() + '/data/Palavras/teste.csv'
     palavras = csv_para_lista(caminho_palavras)
-    print(palavras)
-    # palavras = ['a', 'ba', 'baaaa', 'aba',
-    #             'ababaaa', 'ab', 'a', 'abb', 'bab', '']
     aceitas, rejeitadas = afd.avalia_palavras(palavras)
     print('aceitas= '+str(aceitas))
     print('rejeitadas= '+str(rejeitadas))
 
-    # Transforma AFD em uma GR
+
+def gera_gr(afd):
+    # ---- Transforma AFD em uma GR ----
+    caminho_gr = os.getcwd() + '/data/GR/exemploGR.txt'
     gr = afd.para_gramatica_regular()
+    gr.gera_arquivo(caminho_gr)
     print(gr)
 
-    caminho_gr = os.getcwd() + '/data/GR/exemploGR.txt'
-    gr.gera_arquivo(caminho_gr)
+
+if __name__ == '__main__':
+    le_afn_e_transforma_para_afd()

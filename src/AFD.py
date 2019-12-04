@@ -69,22 +69,12 @@ class AFD:
                        e in self.funcoes_programa.items()])
         return output
 
-    def saida(self, estado, simbolo):
-        ''' Dado um estado e um simbolo,
-        retorna o seu estado resultante 
-        a partir das funcoes programas do AFD'''
-        funcao_programa = (estado, simbolo)
-        for fp, resultante in self.funcoes_programa.items():
-            if fp == funcao_programa:
-                return str(resultante)
-        return None
-
     def aceita(self, palavra):
         ''' Dada uma palavra, retorna True se ela eh aceita pelo AFD,
         ou False caso nao seja'''
         estado_atual = self.estado_inicial
         for simbolo in palavra:
-            resultante = self.saida(estado_atual, simbolo)
+            resultante = self.funcoes_programa.get((estado_atual, simbolo))
             if resultante == None:
                 return False
             else:
@@ -116,7 +106,7 @@ class AFD:
         for estado in self.estados:
             producoes[estado] = []
             for simbolo in self.simbolos:
-                prod = self.saida(estado, simbolo)
+                prod = self.funcoes_programa.get((estado, simbolo))
                 if prod:
                     producoes[estado].append(simbolo + " " + prod)
 
@@ -128,6 +118,25 @@ class AFD:
 
         return GR(nome=self.nome, variaveis=self.estados, terminais=self.simbolos, producoes=producoes, variavel_inicial=self.estado_inicial)
 
+    def funcao_programa_total(self):
+        # QV eh o estado vazio desintado a receber
+        for estado in self.estados:
+            for simbolo in self.simbolos:
+                fp = self.funcoes_programa.get((estado, simbolo))
+                if not fp:
+                    self.funcoes_programa[(estado, simbolo)] = 'QV'
+
+    def minimizado(self):
+        self.funcao_programa_total()
+
+    def metodo_tabela(self):
+        tabela = pd.DataFrame(
+            columns=self.estados[:-1], index=self.estados[1:])
+        for y in range(1, len(self.estados)-1):
+            for x in range(0, y-1):
+                print(tabela.iloc[y])
+            print('/n')
+
     def eh_equivalente(self, afd):
         ''' Determina se os dois AFD's sao equivalentes
         minimizando os dois e comparando eles posteriormente 
@@ -138,16 +147,3 @@ class AFD:
         # depois de minimizado
         # renomear os estados e terminais
         # comparar se sao iguais
-
-    def equaivalencia_de_estados(self):
-        pass
-        table = pd.DataFrame(columns=self.estados[:-1], index=self.estados[1:])
-        print(table.loc['Q1', 'Q2'])
-
-    def funcao_programa_total(self):
-        # QV eh o estado vaziodesintado a receber
-        for estado in self.estados:
-            for simbolo in self.simbolos:
-                fp = self.funcoes_programa.get((estado, simbolo))
-                if not fp:
-                    self.funcoes_programa[(estado, simbolo)] = 'QV'
