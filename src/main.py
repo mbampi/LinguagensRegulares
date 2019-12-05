@@ -44,17 +44,29 @@ def le_lista_palavras_e_avalia(afd):
 
 
 def compara_automatos():
-    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    caminho_arquivo = os.getcwd() + '/data/AFD/eq1.txt'
     afd1 = AFD.afd_de_arquivo(caminho_arquivo)
 
-    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    caminho_arquivo = os.getcwd() + '/data/AFD/eq2.txt'
     afd2 = AFD.afd_de_arquivo(caminho_arquivo)
 
     print(afd1.eh_equivalente(afd2))
 
 
-def gera_gr(afd):
+def minimizacao():
+    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    afd1 = AFD.afd_de_arquivo(caminho_arquivo)
+    print(afd1)
+
+    afd1.minimizado()
+    print(afd1)
+
+
+def gera_gr():
     # ---- Transforma AFD em uma GR ----
+    caminho_arquivo = os.getcwd() + '/data/AFD/exemplo.txt'
+    afd = AFD.afd_de_arquivo(caminho_arquivo)
+    print(afd)
     caminho_gr = os.getcwd() + '/data/GR/exemploGR.txt'
     gr = afd.para_gramatica_regular()
     gr.gera_arquivo(caminho_gr)
@@ -62,4 +74,4 @@ def gera_gr(afd):
 
 
 if __name__ == '__main__':
-    compara_automatos()
+    gera_gr()

@@ -133,7 +133,109 @@ class AFD:
                     self.funcoes_programa[(estado, simbolo)] = 'QV'
 
     def minimizado(self):
-        self.funcao_programa_total()
+        tabSt = {}
+        '''
+            Cria uma tabela de todos os pares de estados (Qi, Qj) todos desmarcados inicialmente ( {(Qi, Qj) : True} )
+        '''
+        for a in range(len(self.estados)):
+            for b in range(a+1, len(self.estados)):
+                st_a = self.estados[a]
+                st_b = self.estados[b]
+                tabSt[(st_a, st_b)] = True
+        '''
+            Percorre a tabela e marca {(Qi, Qj) : False} os pares de estados (Qi, Qj) onde Qi ∈ F e Qj ∉ F, ou vice-versa
+        '''
+        for ka, kb in tabSt:
+            if (ka in self.estados_finais) and (kb not in self.estados_finais):
+                tabSt[(ka, kb)] = False
+            elif (kb in self.estados_finais) and (ka not in self.estados_finais):
+                tabSt[(ka, kb)] = False
+        '''
+            Fica repetindo o processo até não ter mais novas marcações:
+            se houver um par não marcado (Qi, Qj), marque-o se o par {δ(Qi, S), δ(Qi, S)} estiver marcado para qualquer alfabeto de entrada (S)
+        '''
+        marcou = True
+        while(marcou):
+            for ka, kb in tabSt:
+                marcou = False
+                if tabSt[(ka, kb)]:
+                    for s in self.simbolos:
+                        st_ka = (ka, s)
+                        st_kb = (kb, s)
+                        if st_ka not in self.funcoes_programa:
+                            tabSt[(ka, kb)] = False
+                            marcou = True
+                        elif st_kb not in self.funcoes_programa:
+                            tabSt[(ka, kb)] = False
+                            marcou = True
+                        else:
+                            st_ra = self.funcoes_programa[st_ka]
+                            st_rb = self.funcoes_programa[st_kb]
+                            a = (st_ra, st_rb)
+                            b = (st_rb, st_rb)
+                            if a in tabSt:
+                                if not tabSt[a]:
+                                    tabSt[(ka, kb)] = False
+                                    marcou = True
+                            if b in tabSt:
+                                if not tabSt[b]:
+                                    tabSt[(ka, kb)] = False
+                                    marcou = True
+        '''
+            Cria duas listas auxiliares, sendo que elas tem o seguinte proposito:
+            listStEq - É uma lista de lista, onde na lista filho vai ter a lista de estados equivalente.
+            stPassados - É uma lista que informa quais são os estados que foram salvos na listStEq para
+                facilitar a remoção desses estados unicos e assim substitui-los por novo estado que
+                unifica todos os estados equivalentes
+        '''
+        listStEq = []
+        stPassados = []
+        for ka, kb in tabSt:
+            if tabSt[(ka, kb)]:
+                if not listStEq:
+                    listStEq.append([ka, kb])
+                    stPassados.append(ka)
+                    stPassados.append(kb)
+                else:
+                    if ka in stPassados:
+                        for x in listStEq:
+                            if ka in x and kb not in x:
+                                x.append(kb)
+                                stPassados.append(kb)
+                    elif kb in stPassados:
+                        for x in listStEq:
+                            if kb in x and ka not in x:
+                                x.append(ka)
+                                stPassados.append(ka)
+                    else:
+                        listStEq.append([ka, kb])
+                        stPassados.append(ka)
+                        stPassados.append(kb)
+        '''
+            Cria o novo estado, que unifica todos os estados equivalente, e remove os setados unicos
+        '''
+        for x in listStEq:
+            stPassados = []
+            stNew = ''
+            for y in x:
+                stNew = stNew+y
+                stPassados.append(y)
+            self.estados.append(stNew)
+            for stRemove in stPassados:
+                if stRemove in self.estados:
+                    self.estados.remove(stRemove)
+                if stRemove == self.estado_inicial:
+                    self.estado_inicial = stNew
+                if stRemove in self.estados_finais:
+                    if stNew not in self.estados_finais:
+                        self.estados_finais.append(stNew)
+                    self.estados_finais.remove(stRemove)
+                for s in self.simbolos:
+                    if (stRemove, s) in self.funcoes_programa:
+                        if (stNew, s) not in self.funcoes_programa:
+                            a = self.funcoes_programa[(stRemove, s)]
+                            self.funcoes_programa[(stNew, s)] = a
+                        del self.funcoes_programa[(stRemove, s)]
 
     def metodo_tabela(self):
         tabela = pd.DataFrame(
@@ -164,7 +266,7 @@ class AFD:
         afd1.minimizado()
         afd2.minimizado()
         if len(afd1.estados) != len(afd2.estados) or\
-                len(afd1.estaos_finais) != len(afd.estados_finais) or\
+                len(afd1.estados_finais) != len(afd2.estados_finais) or\
                 len(afd1.simbolos) != len(afd2.simbolos):
             return False
 
