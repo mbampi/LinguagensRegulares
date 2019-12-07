@@ -74,4 +74,21 @@ def gera_gr():
 
 
 if __name__ == '__main__':
-    gera_gr()
+
+    print("\n--- AUTOMATO FINITO DETERMINISTICO ---")
+    caminho_arquivo = os.getcwd() + '/data/vitrola.txt'
+    afd = AFD.afd_de_arquivo(caminho_arquivo)
+    print(afd)
+
+    print("\n--- AVALIA PALAVRAS ---")
+    caminho_palavras = os.getcwd() + '/data/Palavras/palavras_vitrola.csv'
+    palavras = csv_para_lista(caminho_palavras)
+    aceitas, rejeitadas = afd.avalia_palavras(palavras)
+    print('aceitas= '+str(aceitas))
+    print('rejeitadas= '+str(rejeitadas))
+
+    print("\n--- GRAMATICA REGULAR ---")
+    caminho_gr = os.getcwd() + '/data/GR/vitrolaGR.txt'
+    gr = afd.para_gramatica_regular()
+    gr.gera_arquivo(caminho_gr)
+    print(gr)

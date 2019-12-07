@@ -1,0 +1,14 @@
+Vitrola=({q5,q1,q2,q3,q4,q0},{LG,CD,TD,CF,TF,PL,PS,BA,LA,PM,DS},q5,P)
+P
+q5 -> LG q0
+q5 ->  
+q1 -> TD q0
+q1 -> BA q3
+q2 -> TF q0
+q2 -> PL q4
+q3 -> LA q1
+q4 -> PS q2
+q4 -> PM q4
+q0 -> CD q1
+q0 -> CF q2
+q0 -> DS q5
