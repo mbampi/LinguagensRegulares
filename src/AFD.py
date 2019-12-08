@@ -237,7 +237,6 @@ class AFD:
                             self.funcoes_programa[(stNew, s)] = a
                         del self.funcoes_programa[(stRemove, s)]
 
-    def metodo_tabela(self):
         tabela = pd.DataFrame(
             columns=self.estados[:-1], index=self.estados[1:])
         for y in range(1, len(self.estados)-1):
