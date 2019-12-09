@@ -1,6 +1,5 @@
 
 import re
-import pandas as pd
 from itertools import product
 
 from GR import GR
