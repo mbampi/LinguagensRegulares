@@ -80,7 +80,7 @@ if __name__ == '__main__':
     afd = AFD.afd_de_arquivo(caminho_arquivo)
     print(afd)
 
-    print("\n--- AVALIA PALAVRAS ---")
+    print("\n--- AVALIA PALAVRAS ---\n")
     caminho_palavras = os.getcwd() + '/data/Palavras/palavras_vitrola.csv'
     palavras = csv_para_lista(caminho_palavras)
     aceitas, rejeitadas = afd.avalia_palavras(palavras)
